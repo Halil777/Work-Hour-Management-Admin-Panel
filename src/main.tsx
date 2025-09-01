@@ -8,6 +8,7 @@ import ThemeProvider from "./theme/ThemeProvider";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import "dayjs/locale/ru";
+import { LanguageProvider } from "./i18n";
 
 const client = new QueryClient({
   defaultOptions: {
@@ -21,15 +22,17 @@ const client = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <QueryClientProvider client={client}>
-      <ThemeProvider>
-        <CssBaseline />
-        <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
-          <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
-            <App />
-          </LocalizationProvider>
-        </SnackbarProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <LanguageProvider>
+      <QueryClientProvider client={client}>
+        <ThemeProvider>
+          <CssBaseline />
+          <SnackbarProvider maxSnack={3} autoHideDuration={3000}>
+            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
+              <App />
+            </LocalizationProvider>
+          </SnackbarProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+    </LanguageProvider>
   </React.StrictMode>
 );

@@ -13,15 +13,16 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import UploadIcon from "@mui/icons-material/UploadFile";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
+import { useTranslation } from "../../i18n";
 
 const menu = [
-  { text: "Dashboard", path: "/", icon: <DashboardIcon /> },
-  { text: "Users", path: "/users", icon: <PeopleIcon /> },
-  { text: "Feedbacks", path: "/feedbacks", icon: <FeedbackIcon /> },
-  { text: "Worker Hours", path: "/worker-hours", icon: <AccessTimeIcon /> },
-  { text: "Uploads", path: "/uploads", icon: <UploadIcon /> },
+  { text: "menuDashboard", path: "/", icon: <DashboardIcon /> },
+  { text: "menuUsers", path: "/users", icon: <PeopleIcon /> },
+  { text: "menuFeedbacks", path: "/feedbacks", icon: <FeedbackIcon /> },
+  { text: "menuWorkerHours", path: "/worker-hours", icon: <AccessTimeIcon /> },
+  { text: "menuUploads", path: "/uploads", icon: <UploadIcon /> },
   {
-    text: "Disconnect ",
+    text: "menuDisconnect",
     path: "/disconnect-telegram",
     icon: <LinkOffIcon />,
   },
@@ -30,6 +31,7 @@ const menu = [
 export default function Sidebar() {
   const location = useLocation();
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Drawer
@@ -83,12 +85,12 @@ export default function Sidebar() {
           >
             <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
             <ListItemText
-              primary={item.text}
+              primary={t(item.text)}
               primaryTypographyProps={{ fontWeight: 600 }}
             />
-          </ListItemButton>
-        ))}
-      </List>
+         </ListItemButton>
+       ))}
+     </List>
     </Drawer>
   );
 }

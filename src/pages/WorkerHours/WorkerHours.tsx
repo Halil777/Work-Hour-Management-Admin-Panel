@@ -5,6 +5,7 @@ import WorkerHoursTable from "./WorkerHoursTable";
 import CountUp from "react-countup";
 import SearchInput from "../../components/common/SearchInput";
 import TablePagination from "@mui/material/TablePagination";
+import { useTranslation } from "../../i18n";
 
 export default function WorkerHoursPage() {
   const [page, setPage] = useState(0);
@@ -17,6 +18,7 @@ export default function WorkerHoursPage() {
     search
   );
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Box>
@@ -26,7 +28,7 @@ export default function WorkerHoursPage() {
         fontWeight={700}
         sx={{ textTransform: "uppercase", letterSpacing: 1 }}
       >
-        Рабочие часы
+        {t("workerHoursTitle")}
       </Typography>
 
       <Stack direction="row" my={3} spacing={2} alignItems="center">
@@ -41,7 +43,9 @@ export default function WorkerHoursPage() {
                 : theme.palette.primary.main,
           }}
         >
-          <CountUp end={data?.pagination.total || 0} duration={2} /> записей
+          <CountUp end={data?.pagination.total || 0} duration={2} />
+          {" "}
+          {t("workerHoursRecords", { count: data?.pagination.total || 0 })}
         </Typography>
       </Stack>
 

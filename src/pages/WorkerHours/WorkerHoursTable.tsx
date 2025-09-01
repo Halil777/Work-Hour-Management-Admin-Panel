@@ -13,6 +13,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import type { WorkerHour } from "../../hooks/useWorkerHours";
 import WorkerDetailsDrawer from "./WorkerDetailsDrawer";
+import { useTranslation } from "../../i18n";
 
 interface Props {
   data: WorkerHour[];
@@ -30,11 +31,12 @@ export default function WorkerHoursTable({
   const [selectedWorker, setSelectedWorker] = useState<
     WorkerHour["user"] | null
   >(null);
+  const { t } = useTranslation();
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopied(text);
-    toast.success(`Скопировано: ${text}`, { duration: 2000 });
+    toast.success(`${t("copied")}: ${text}`, { duration: 2000 });
 
     // reset after 2 sec
     setTimeout(() => setCopied(null), 2000);
@@ -58,21 +60,19 @@ export default function WorkerHoursTable({
               },
             }}
           >
-            {["Пользователь", "Должность", "Telegram", "Дата", "Часы"].map(
-              (head) => (
-                <TableCell
-                  key={head}
-                  sx={{
-                    fontWeight: 700,
-                    textTransform: "uppercase",
-                    letterSpacing: 0.5,
-                    fontSize: "0.75rem",
-                  }}
-                >
-                  {head}
-                </TableCell>
-              )
-            )}
+            {[t("workerHoursUser"), t("workerHoursPosition"), t("usersTelegram"), t("workerHoursDate"), t("workerHoursHours")].map((head) => (
+              <TableCell
+                key={head}
+                sx={{
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: 0.5,
+                  fontSize: "0.75rem",
+                }}
+              >
+                {head}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
 
