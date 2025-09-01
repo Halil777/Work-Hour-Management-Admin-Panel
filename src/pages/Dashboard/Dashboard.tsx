@@ -9,10 +9,12 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import TopWeeklyWorkers from "./TopWeeklyWorkers";
 import TopMonthlyWorkers from "./TopMonthlyWorkers";
 import MonthlyTotalHours from "./MonthlyTotalHours";
+import { useTranslation } from "../../i18n";
 
 export default function Dashboard() {
   const { data, isLoading } = useStats();
   const theme = useTheme();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
@@ -38,14 +40,14 @@ export default function Dashboard() {
   return (
     <Box>
       <Typography variant="h5" mb={3} fontWeight={700}>
-        Dashboard
+        {t("menuDashboard")}
       </Typography>
 
       {/* Top Stats */}
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 3 }}>
           <StatsCard
-            title="Total Users"
+            title={t("statsTotalUsers")}
             value={data?.totalUsers}
             icon={<PeopleIcon fontSize="large" />}
             color="#1976d2"
@@ -53,7 +55,7 @@ export default function Dashboard() {
         </Grid>
         <Grid size={{ xs: 12, md: 3 }}>
           <StatsCard
-            title="Linked Users"
+            title={t("statsLinkedUsers")}
             value={data?.linkedUsers}
             icon={<CheckCircleIcon fontSize="large" />}
             color="#4caf50"
@@ -61,7 +63,7 @@ export default function Dashboard() {
         </Grid>
         <Grid size={{ xs: 12, md: 3 }}>
           <StatsCard
-            title="Unlinked Users"
+            title={t("statsUnlinkedUsers")}
             value={data?.unlinkedUsers}
             icon={<CancelIcon fontSize="large" />}
             color="#f44336"
@@ -69,7 +71,7 @@ export default function Dashboard() {
         </Grid>
         <Grid size={{ xs: 12, md: 3 }}>
           <StatsCard
-            title="Today Feedbacks"
+            title={t("statsTodayFeedbacks")}
             value={data?.todayFeedbacks}
             icon={<FeedbackIcon fontSize="large" />}
             color="#9c27b0"
@@ -123,7 +125,7 @@ export default function Dashboard() {
                 letterSpacing: 0.5,
               }}
             >
-              Users Linked vs Unlinked
+              {t("chartUsersLinked")}
             </Typography>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>

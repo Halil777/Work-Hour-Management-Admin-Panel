@@ -1,4 +1,5 @@
 import { TextField } from "@mui/material";
+import { useTranslation } from "../../i18n";
 
 interface Props {
   value: string;
@@ -6,9 +7,10 @@ interface Props {
 }
 
 export default function SearchFeedback({ value, onChange }: Props) {
+  const { t } = useTranslation();
   return (
     <TextField
-      label="Поиск по имени"
+      label={t("searchByName")}
       variant="outlined"
       value={value}
       onChange={(e) => onChange(e.target.value)}

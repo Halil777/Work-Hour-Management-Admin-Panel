@@ -17,6 +17,7 @@ import {
 import { useState } from "react";
 import { useSearchUsers } from "../../hooks/useUsers";
 import SearchInput from "../../components/common/SearchInput";
+import { useTranslation } from "../../i18n";
 
 export default function UsersPage() {
   const [page, setPage] = useState(0);
@@ -28,6 +29,7 @@ export default function UsersPage() {
     query
   );
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <Box>
@@ -40,7 +42,7 @@ export default function UsersPage() {
           letterSpacing: 1,
         }}
       >
-        Users
+        {t("usersTitle")}
       </Typography>
 
       {/* Search */}
@@ -82,12 +84,12 @@ export default function UsersPage() {
                 }}
               >
                 {[
-                  "ID",
-                  "Name",
-                  "Position",
-                  "Status",
-                  "Telegram",
-                  "Created At",
+                  t("usersId"),
+                  t("usersName"),
+                  t("usersPosition"),
+                  t("usersStatus"),
+                  t("usersTelegram"),
+                  t("usersCreatedAt"),
                 ].map((head) => (
                   <TableCell
                     key={head}
@@ -133,14 +135,14 @@ export default function UsersPage() {
                       <TableCell>
                         {u.isLinked ? (
                           <Chip
-                            label="Linked"
+                            label={t("usersLinked")}
                             color="success"
                             size="small"
                             sx={{ fontWeight: 600 }}
                           />
                         ) : (
                           <Chip
-                            label="Unlinked"
+                            label={t("usersUnlinked")}
                             color="default"
                             size="small"
                             sx={{ fontWeight: 600 }}
@@ -183,7 +185,7 @@ export default function UsersPage() {
         <Box mt={2} textAlign="center">
           <CircularProgress size={24} />
           <Typography variant="body2" sx={{ mt: 1 }}>
-            Updating...
+            {t("usersUpdating")}
           </Typography>
         </Box>
       )}

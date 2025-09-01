@@ -21,6 +21,7 @@ import UploadsHistory from "./UploadsHistory";
 import UploadAnimation from "./UploadAnimation";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { useTranslation } from "../../i18n";
 
 interface FilePreview {
   file: File;
@@ -35,13 +36,14 @@ export default function ExcelUpload() {
   const [uploading, setUploading] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<string>("");
   const cancelSource = useRef<CancelTokenSource | null>(null);
+  const { t } = useTranslation();
 
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     if (!file) return;
 
     if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
-      toast.error("Разрешены только Excel файлы (.xlsx, .xls)");
+      toast.error(t("uploadsOnlyExcel"));
       return;
     }
 
@@ -50,7 +52,7 @@ export default function ExcelUpload() {
       url: URL.createObjectURL(file),
     };
     setFiles([mapped]);
-    toast.success(`Файл "${file.name}" выбран`);
+    toast.success(t("uploadsSelectFile", { file: file.name }));
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -69,22 +71,22 @@ export default function ExcelUpload() {
     setProgress(0);
     setUploading(false);
     setTimeLeft("");
-    toast("Файл удалён", { icon: "🗑" });
+    toast(t("uploadsRemoveFile"), { icon: "🗑" });
   };
 
   const handleCancel = () => {
     if (cancelSource.current) {
-      cancelSource.current.cancel("Загрузка отменена админом");
+      cancelSource.current.cancel("admin cancelled");
       setUploading(false);
       setProgress(0);
       setTimeLeft("");
-      toast("Загрузка отменена ❌");
+      toast(t("uploadsCancel"));
     }
   };
 
   const handleUpload = async () => {
     if (!files[0] || !targetDate) {
-      toast.error("Не выбран файл или дата");
+      toast.error(t("uploadsNoFileOrDate"));
       return;
     }
 
@@ -154,9 +156,9 @@ export default function ExcelUpload() {
       }
     } catch (error: any) {
       if (axios.isCancel(error)) {
-        toast("Загрузка отменена ❌");
+        toast(t("uploadsCancel"));
       } else {
-        toast.error(error?.response?.data?.error || "Ошибка загрузки");
+        toast.error(error?.response?.data?.error || "Error");
       }
     } finally {
       setUploading(false);
@@ -170,7 +172,7 @@ export default function ExcelUpload() {
       <Box>
         {/* Date picker */}
         <TextField
-          label="Выберите дату"
+          label={t("uploadsDateLabel")}
           type="date"
           value={targetDate}
           onChange={(e) => setTargetDate(e.target.value)}
@@ -212,11 +214,11 @@ export default function ExcelUpload() {
           />
           <Typography variant="h6" mt={1}>
             {isDragActive
-              ? "Отпустите файл здесь..."
-              : "Перетащите Excel файл или нажмите для выбора"}
+              ? t("uploadsDrop")
+              : t("uploadsDrag")}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Поддерживаются только .xlsx и .xls
+            {t("uploadsSupport")}
           </Typography>
         </Paper>
 
@@ -297,7 +299,7 @@ export default function ExcelUpload() {
                     variant="body2"
                     sx={{ color: "success.main", fontWeight: 600 }}
                   >
-                    {progress === 100 ? "Обработка..." : "Загрузка..."}
+                    {progress === 100 ? t("uploadsUploading") : t("uploadsUploading")}
                   </Typography>
                 </Stack>
               </Box>
@@ -319,7 +321,7 @@ export default function ExcelUpload() {
             disabled={!targetDate || uploading}
             onClick={handleUpload}
           >
-            {uploading ? "Загружается..." : "Загрузить Excel"}
+            {uploading ? t("uploadsUploading") : t("uploadsUpload")}
           </Button>
         )}
       </Box>

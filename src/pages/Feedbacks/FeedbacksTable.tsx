@@ -18,6 +18,7 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import type { Feedback } from "../../hooks/useFeedbacks";
 import FeedbackResponseDialog from "./FeedbackResponseDialog";
+import { useTranslation } from "../../i18n";
 
 interface Props {
   data: Feedback[];
@@ -39,6 +40,7 @@ export default function FeedbacksTable({
   const theme = useTheme();
   const [selected, setSelected] = useState<Feedback | null>(null);
   const [snackbar, setSnackbar] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   // pagination state
   const [page, setPage] = useState(0);
@@ -78,9 +80,9 @@ export default function FeedbacksTable({
     setPage(0);
   };
 
-  const copyToClipboard = (text: string, label: string) => {
+  const copyToClipboard = (text: string, labelKey: string) => {
     navigator.clipboard.writeText(text);
-    setSnackbar(`${label} скопирован!`);
+    setSnackbar(`${t(labelKey)} ${t("copied")}`);
   };
 
   const paginated = filtered.slice(
@@ -111,11 +113,11 @@ export default function FeedbacksTable({
             }}
           >
             {[
-              "Пользователь",
-              "Должность",
-              "Телеграм",
-              "Сообщение",
-              "Действия",
+              t("feedbacksUser"),
+              t("feedbacksPosition"),
+              t("feedbacksTelegram"),
+              t("feedbacksMessage"),
+              t("feedbacksActions"),
             ].map((head) => (
               <TableCell
                 key={head}
@@ -144,7 +146,7 @@ export default function FeedbacksTable({
           ) : paginated.length === 0 ? (
             <TableRow>
               <TableCell colSpan={6} align="center">
-                Нет обратной связи по неверному времени
+                {t("feedbacksNone")}
               </TableCell>
             </TableRow>
           ) : (
@@ -152,14 +154,14 @@ export default function FeedbacksTable({
               <TableRow key={f.id} hover>
                 {/* User */}
                 <TableCell>
-                  <Tooltip title="Скопировать имя">
+                  <Tooltip title={t("copyName")}>
                     <span
                       style={{
                         cursor: "pointer",
                         fontWeight: 600,
                         color: theme.palette.primary.main,
                       }}
-                      onClick={() => copyToClipboard(f.user.name, "Имя")}
+                      onClick={() => copyToClipboard(f.user.name, "nameLabel")}
                     >
                       {f.user.name}
                     </span>
@@ -172,14 +174,14 @@ export default function FeedbacksTable({
                 {/* Telegram */}
                 <TableCell>
                   {f.user.telegramId ? (
-                    <Tooltip title="Скопировать Telegram ID">
+                    <Tooltip title={t("copyTelegram")}>
                       <span
                         style={{
                           cursor: "pointer",
                           color: theme.palette.secondary.main,
                         }}
                         onClick={() =>
-                          copyToClipboard(f.user.telegramId!, "Telegram ID")
+                          copyToClipboard(f.user.telegramId!, "telegramIdLabel")
                         }
                       >
                         {f.user.telegramId}
@@ -196,7 +198,7 @@ export default function FeedbacksTable({
                   {f.workerHours?.date
                     ? new Date(f.workerHours.date).toLocaleDateString("ru-RU")
                     : "-"}{" "}
-                  — Рабочий указал: <b>{f.message.match(/\d+/)?.[0]} ч.</b>
+                  — {t("feedbacksWorkerReported")}: <b>{f.message.match(/\d+/)?.[0]} {t("hoursShort")}</b>
                 </TableCell>
 
                 {/* Actions */}

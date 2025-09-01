@@ -5,6 +5,7 @@ import CountUp from "react-countup";
 import { useState } from "react";
 import FilterFeedback from "./FilterFeedback";
 import SearchFeedback from "./SearchFeedback";
+import { useTranslation } from "../../i18n";
 
 export default function FeedbacksPage() {
   const { data, isLoading, isFetching } = useFeedbacks();
@@ -13,6 +14,7 @@ export default function FeedbacksPage() {
   // state for filters
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const { t } = useTranslation();
 
   // diňe INCORRECT_TIME hasapla
   const incorrect = (data || []).filter((f) => f.action === "INCORRECT_TIME");
@@ -28,7 +30,7 @@ export default function FeedbacksPage() {
           letterSpacing: 1,
         }}
       >
-        Обратная связь
+        {t("menuFeedbacks")}
       </Typography>
 
       {/* Сан INCORRECT_TIME bilen */}
@@ -44,9 +46,8 @@ export default function FeedbacksPage() {
                 : theme.palette.primary.main,
           }}
         >
-          Показано <CountUp end={incorrect.length} duration={2} /> сообщение(й)
-          с неверным временем
-        </Typography>
+          {t("feedbacksShown", { count: incorrect.length })}
+      </Typography>
       </Stack>
 
       {/* Filter + Search */}

@@ -11,6 +11,7 @@ import {
   useTheme,
 } from "@mui/material";
 import { api } from "../../api/client";
+import { useTranslation } from "../../i18n";
 
 export default function DisconnectTelegramPage() {
   const theme = useTheme();
@@ -18,10 +19,11 @@ export default function DisconnectTelegramPage() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { t } = useTranslation();
 
   const handleDisconnect = async () => {
     if (!telegramId.trim()) {
-      setError("Telegram ID is required");
+      setError(t("disconnectRequired"));
       return;
     }
     try {
@@ -35,7 +37,7 @@ export default function DisconnectTelegramPage() {
 
       setResult(res.data);
     } catch (e: any) {
-      setError(e?.response?.data?.error || "Failed to disconnect Telegram ID");
+      setError(e?.response?.data?.error || t("disconnectFailed"));
     } finally {
       setLoading(false);
     }
@@ -49,7 +51,7 @@ export default function DisconnectTelegramPage() {
         fontWeight={700}
         sx={{ textTransform: "uppercase", letterSpacing: 1 }}
       >
-        Disconnect Telegram
+        {t("disconnectTitle")}
       </Typography>
 
       <Paper
@@ -68,7 +70,7 @@ export default function DisconnectTelegramPage() {
       >
         <Stack spacing={3}>
           <TextField
-            label="Telegram ID"
+            label={t("disconnectTelegramId")}
             value={telegramId}
             onChange={(e) => setTelegramId(e.target.value)}
             fullWidth
@@ -83,7 +85,7 @@ export default function DisconnectTelegramPage() {
             {loading ? (
               <CircularProgress size={20} color="inherit" />
             ) : (
-              "Disconnect"
+              {t("disconnectButton")}
             )}
           </Button>
 
