@@ -1,21 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import { getUsers, searchUsers } from "../api/services/userService";
-import type { PaginatedResponse, User } from "../types/user";
+import { api } from "../api/client";
+import type { User } from "../types/user";
 
-// plain list
+// plain list with caching
 export const useUsers = () => {
-  return useQuery<User[]>({
+  return useQuery<User[], Error>({
     queryKey: ["users"],
-    queryFn: getUsers,
-    staleTime: 1000 * 60 * 5,
-  });
-};
-
-// search + pagination
-export const useSearchUsers = (page: number, limit: number, q: string) => {
-  return useQuery<PaginatedResponse<User>>({
-    queryKey: ["search-users", page, limit, q],
-    queryFn: () => searchUsers(page, limit, q),
-    placeholderData: (previous) => previous, // 👈 keepPreviousData ornuna
+    queryFn: async () => {
+      const res = await api.get("/admin/users"); // 👈 diňe şu bar bolsa
+      return res.data;
+    },
+    staleTime: 1000 * 60, // 1 minut cache
+    gcTime: 1000 * 60 * 5, // 5 minut garbage collect
   });
 };

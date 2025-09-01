@@ -6,9 +6,9 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import { useStats } from "../../hooks/useStats";
 import StatsCard from "../../components/common/StatsCard";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import TopWeeklyWorkers from "./TopWeeklyWorkers";
-import TopMonthlyWorkers from "./TopMonthlyWorkers";
-import MonthlyTotalHours from "./MonthlyTotalHours";
+// import TopWeeklyWorkers from "./TopWeeklyWorkers";
+// import TopMonthlyWorkers from "./TopMonthlyWorkers";
+// import MonthlyTotalHours from "./MonthlyTotalHours";
 import { useTranslation } from "../../i18n";
 
 export default function Dashboard() {
@@ -79,7 +79,7 @@ export default function Dashboard() {
         </Grid>
       </Grid>
 
-      <Grid container spacing={3} mt={4}>
+      {/* <Grid container spacing={3} mt={4}>
         <Grid size={{ xs: 12, md: 6 }}>
           <TopWeeklyWorkers />
         </Grid>
@@ -89,7 +89,7 @@ export default function Dashboard() {
         <Grid size={{ xs: 12 }}>
           <MonthlyTotalHours />
         </Grid>
-      </Grid>
+      </Grid> */}
 
       {/* Charts */}
       <Grid container spacing={3} mt={4}>

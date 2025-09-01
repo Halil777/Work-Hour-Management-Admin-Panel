@@ -85,7 +85,7 @@ export default function DisconnectTelegramPage() {
             {loading ? (
               <CircularProgress size={20} color="inherit" />
             ) : (
-              {t("disconnectButton")}
+              t("disconnectButton")
             )}
           </Button>
 

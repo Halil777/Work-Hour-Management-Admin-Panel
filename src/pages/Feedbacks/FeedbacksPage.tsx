@@ -47,15 +47,15 @@ export default function FeedbacksPage() {
           }}
         >
           {t("feedbacksShown", { count: incorrect.length })}
-      </Typography>
+        </Typography>
       </Stack>
 
       {/* Filter + Search */}
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={2}>
-        <FilterFeedback
+        {/* <FilterFeedback
           selectedDate={selectedDate}
           onChange={setSelectedDate}
-        />
+        /> */}
         <SearchFeedback value={searchQuery} onChange={setSearchQuery} />
       </Stack>
 

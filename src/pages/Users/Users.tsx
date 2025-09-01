@@ -1,35 +1,52 @@
 import {
   Box,
-  Typography,
   Paper,
+  Typography,
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
-  TableContainer,
   TablePagination,
   Chip,
-  CircularProgress,
   Skeleton,
+  CircularProgress,
   useTheme,
 } from "@mui/material";
-import { useState } from "react";
-import { useSearchUsers } from "../../hooks/useUsers";
+import { useState, useMemo } from "react";
+import { useUsers } from "../../hooks/useUsers";
 import SearchInput from "../../components/common/SearchInput";
 import { useTranslation } from "../../i18n";
 
-export default function UsersPage() {
+export default function UsersTable() {
+  const theme = useTheme();
+  const { t } = useTranslation();
+
+  // local states
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [query, setQuery] = useState("");
-  const { data, isLoading, isFetching } = useSearchUsers(
-    page + 1,
-    rowsPerPage,
-    query
-  );
-  const theme = useTheme();
-  const { t } = useTranslation();
+
+  // fetch all users (cached by react-query)
+  const { data: users, isLoading, isFetching } = useUsers();
+
+  // filter & search
+  const filteredUsers = useMemo(() => {
+    if (!users) return [];
+    return users.filter(
+      (u) =>
+        u.name.toLowerCase().includes(query.toLowerCase()) ||
+        u.position?.toLowerCase().includes(query.toLowerCase()) ||
+        String(u.id).includes(query)
+    );
+  }, [users, query]);
+
+  // pagination slice
+  const paginatedUsers = useMemo(() => {
+    const start = page * rowsPerPage;
+    return filteredUsers.slice(start, start + rowsPerPage);
+  }, [filteredUsers, page, rowsPerPage]);
 
   return (
     <Box>
@@ -37,15 +54,12 @@ export default function UsersPage() {
         variant="h5"
         mb={3}
         fontWeight={700}
-        sx={{
-          textTransform: "uppercase",
-          letterSpacing: 1,
-        }}
+        sx={{ textTransform: "uppercase", letterSpacing: 1 }}
       >
         {t("usersTitle")}
       </Typography>
 
-      {/* Search */}
+      {/* Search input */}
       <Box mb={2}>
         <SearchInput value={query} onChange={setQuery} />
       </Box>
@@ -62,14 +76,6 @@ export default function UsersPage() {
             theme.palette.mode === "dark"
               ? "0 6px 20px rgba(255,140,0,0.35)"
               : "0 6px 20px rgba(25,118,210,0.25)",
-          transition: "all 0.3s ease",
-          "&:hover": {
-            transform: "translateY(-3px)",
-            boxShadow:
-              theme.palette.mode === "dark"
-                ? "0 10px 28px rgba(255,140,0,0.55)"
-                : "0 10px 28px rgba(25,118,210,0.4)",
-          },
         }}
       >
         <TableContainer>
@@ -115,20 +121,8 @@ export default function UsersPage() {
                       </TableCell>
                     </TableRow>
                   ))
-                : data?.items.map((u: any) => (
-                    <TableRow
-                      key={u.id}
-                      hover
-                      sx={{
-                        "&:hover": {
-                          background:
-                            theme.palette.mode === "dark"
-                              ? "rgba(255,140,0,0.1)"
-                              : "rgba(25,118,210,0.08)",
-                          transition: "all 0.2s ease",
-                        },
-                      }}
-                    >
+                : paginatedUsers.map((u) => (
+                    <TableRow key={u.id} hover>
                       <TableCell>{u.id}</TableCell>
                       <TableCell>{u.name}</TableCell>
                       <TableCell>{u.position}</TableCell>
@@ -151,7 +145,7 @@ export default function UsersPage() {
                       </TableCell>
                       <TableCell>{u.telegramId ?? "-"}</TableCell>
                       <TableCell>
-                        {new Date(u.createdAt).toLocaleDateString()}
+                        {new Date(u.createdAt).toLocaleDateString("ru-RU")}
                       </TableCell>
                     </TableRow>
                   ))}
@@ -162,20 +156,13 @@ export default function UsersPage() {
         {/* Pagination */}
         <TablePagination
           component="div"
-          count={data?.pagination.total || 0}
+          count={filteredUsers.length}
           page={page}
           rowsPerPage={rowsPerPage}
           onPageChange={(_, newPage) => setPage(newPage)}
           onRowsPerPageChange={(e) => {
             setRowsPerPage(parseInt(e.target.value, 10));
             setPage(0);
-          }}
-          sx={{
-            borderTop: "1px solid rgba(255,255,255,0.08)",
-            ".MuiTablePagination-toolbar": {
-              justifyContent: "flex-end",
-              fontWeight: 600,
-            },
           }}
         />
       </Paper>

@@ -43,8 +43,7 @@ export default function WorkerHoursPage() {
                 : theme.palette.primary.main,
           }}
         >
-          <CountUp end={data?.pagination.total || 0} duration={2} />
-          {" "}
+          <CountUp end={data?.pagination.total || 0} duration={2} />{" "}
           {t("workerHoursRecords", { count: data?.pagination.total || 0 })}
         </Typography>
       </Stack>
