@@ -40,4 +40,3 @@ export const roleOptions = [
   { value: "superAdmin", label: "Super Admin" },
   { value: "manager", label: "Manager" },
 ];
-

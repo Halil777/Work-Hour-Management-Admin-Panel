@@ -16,12 +16,12 @@ import { useTranslation } from "../i18n";
 import LanguageSwitcher from "../components/common/LanguageSwitcher";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import { Link } from "react-router-dom";
-import useUnreadFeedbackCount from "../hooks/useUnreadFeedbackCount";
+import useUnreadFeedbackPolling from "../hooks/useUnreadFeedbackPolling";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { toggle, mode } = useColorMode();
   const { t } = useTranslation();
-  const unread = useUnreadFeedbackCount();
+  const unread = useUnreadFeedbackPolling(5000);
 
   return (
     <Box
@@ -40,8 +40,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           zIndex: 1201,
           background:
             mode === "dark"
-              ? "linear-gradient(90deg,#ff6f00,#ff9800)" // Tiger glow
-              : "linear-gradient(90deg,#1976d2,#42a5f5)", // Premium blue
+              ? "linear-gradient(90deg,#ff6f00,#ff9800)"
+              : "linear-gradient(90deg,#1976d2,#42a5f5)",
           boxShadow:
             mode === "dark"
               ? "0 4px 20px rgba(255,140,0,0.35)"

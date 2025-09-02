@@ -15,7 +15,7 @@ import UploadIcon from "@mui/icons-material/UploadFile";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import { useTranslation } from "../../i18n";
-import useUnreadFeedbackCount from "../../hooks/useUnreadFeedbackCount";
+import useUnreadFeedbackPolling from "../../hooks/useUnreadFeedbackPolling";
 
 const menu = [
   { text: "menuDashboard", path: "/", icon: <DashboardIcon /> },
@@ -34,7 +34,7 @@ export default function Sidebar() {
   const location = useLocation();
   const theme = useTheme();
   const { t } = useTranslation();
-  const unread = useUnreadFeedbackCount();
+  const unread = useUnreadFeedbackPolling(5000);
 
   return (
     <Drawer
@@ -99,9 +99,9 @@ export default function Sidebar() {
               primary={t(item.text)}
               primaryTypographyProps={{ fontWeight: 600 }}
             />
-         </ListItemButton>
-       ))}
-     </List>
+          </ListItemButton>
+        ))}
+      </List>
     </Drawer>
   );
 }
