@@ -5,6 +5,7 @@ import {
   ListItemIcon,
   ListItemText,
   useTheme,
+  Badge,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -14,6 +15,7 @@ import UploadIcon from "@mui/icons-material/UploadFile";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LinkOffIcon from "@mui/icons-material/LinkOff";
 import { useTranslation } from "../../i18n";
+import useUnreadFeedbackCount from "../../hooks/useUnreadFeedbackCount";
 
 const menu = [
   { text: "menuDashboard", path: "/", icon: <DashboardIcon /> },
@@ -32,6 +34,7 @@ export default function Sidebar() {
   const location = useLocation();
   const theme = useTheme();
   const { t } = useTranslation();
+  const unread = useUnreadFeedbackCount();
 
   return (
     <Drawer
@@ -83,7 +86,15 @@ export default function Sidebar() {
               },
             }}
           >
-            <ListItemIcon sx={{ minWidth: 36 }}>{item.icon}</ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 36 }}>
+              {item.text === "menuFeedbacks" && unread > 0 ? (
+                <Badge color="error" badgeContent={unread}>
+                  {item.icon}
+                </Badge>
+              ) : (
+                item.icon
+              )}
+            </ListItemIcon>
             <ListItemText
               primary={t(item.text)}
               primaryTypographyProps={{ fontWeight: 600 }}
