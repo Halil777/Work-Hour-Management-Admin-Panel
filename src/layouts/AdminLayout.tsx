@@ -14,11 +14,13 @@ import Sidebar from "../components/layout/Sidebar";
 import { useColorMode } from "../theme/ThemeProvider";
 import { useTranslation } from "../i18n";
 import LanguageSwitcher from "../components/common/LanguageSwitcher";
+import { getCurrentUser, roleLabelKeys } from "../utils/auth";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const theme = useTheme();
   const { toggle, mode } = useColorMode();
   const { t } = useTranslation();
+  const user = getCurrentUser();
 
   return (
     <Box
@@ -59,7 +61,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               textTransform: "uppercase",
             }}
           >
-            {t("appTitle")}
+            {user
+              ? `${user.name} | ${t("appTitle")} ${t(roleLabelKeys[user.role])}`
+              : t("appTitle")}
           </Typography>
           <LanguageSwitcher />
           <IconButton color="inherit" onClick={toggle}>
