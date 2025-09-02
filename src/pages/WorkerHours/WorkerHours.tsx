@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useWorkerHours } from "../../hooks/useWorkerHours";
 import WorkerHoursTable from "./WorkerHoursTable";
 import CountUp from "react-countup";
-import SearchInput from "../../components/common/SearchInput";
+// import SearchInput from "../../components/common/SearchInput";
 import TablePagination from "@mui/material/TablePagination";
 import { useTranslation } from "../../i18n";
 
@@ -32,13 +32,13 @@ export default function WorkerHoursPage() {
       </Typography>
 
       <Stack direction="row" my={3} spacing={2} alignItems="center">
-        <SearchInput
+        {/* <SearchInput
           value={search}
           onChange={(val) => {
             setSearch(val);
             setPage(0); // täze gözlegde page reset
           }}
-        />
+        /> */}
         <Typography
           variant="subtitle1"
           sx={{

@@ -6,10 +6,10 @@ import FeedbackIcon from "@mui/icons-material/Feedback";
 import { useStats } from "../../hooks/useStats";
 import StatsCard from "../../components/common/StatsCard";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { useTranslation } from "../../i18n";
 // import TopWeeklyWorkers from "./TopWeeklyWorkers";
 // import TopMonthlyWorkers from "./TopMonthlyWorkers";
 // import MonthlyTotalHours from "./MonthlyTotalHours";
-import { useTranslation } from "../../i18n";
 
 export default function Dashboard() {
   const { data, isLoading } = useStats();
