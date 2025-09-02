@@ -18,7 +18,7 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import type { Feedback } from "../../hooks/useFeedbacks";
 import FeedbackResponseDialog from "./FeedbackResponseDialog";
-import { useTranslation } from "../../i18n";
+import { useTranslation, localeMap } from "../../i18n";
 
 interface Props {
   data: Feedback[];
@@ -40,7 +40,7 @@ export default function FeedbacksTable({
   const theme = useTheme();
   const [selected, setSelected] = useState<Feedback | null>(null);
   const [snackbar, setSnackbar] = useState<string | null>(null);
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   // pagination state
   const [page, setPage] = useState(0);
@@ -69,7 +69,7 @@ export default function FeedbacksTable({
     });
   }
 
-  const handleChangePage = (_: any, newPage: number) => {
+  const handleChangePage = (_: unknown, newPage: number) => {
     setPage(newPage);
   };
 
@@ -196,7 +196,9 @@ export default function FeedbacksTable({
                 <TableCell>
                   📅{" "}
                   {f.workerHours?.date
-                    ? new Date(f.workerHours.date).toLocaleDateString("ru-RU")
+                    ? new Date(f.workerHours.date).toLocaleDateString(
+                        localeMap[lang]
+                      )
                     : "-"}{" "}
                   — {t("feedbacksWorkerReported")}: <b>{f.message.match(/\d+/)?.[0]} {t("hoursShort")}</b>
                 </TableCell>

@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 import type { Feedback } from "../../hooks/useFeedbacks";
 import { api } from "../../api/client";
+import { useTranslation } from "../../i18n";
 
 interface Props {
   feedback: Feedback;
@@ -29,10 +30,11 @@ export default function FeedbackResponseDialog({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const handleSend = async () => {
     if (!message.trim()) {
-      setError("Response message cannot be empty");
+      setError(t("responseEmptyError"));
       return;
     }
     try {
@@ -48,8 +50,8 @@ export default function FeedbackResponseDialog({
       // parent state update
       onResponded?.(feedback.id);
       onClose();
-    } catch (e) {
-      setError("Failed to send response. Please try again.");
+    } catch {
+      setError(t("responseFailed"));
     } finally {
       setLoading(false);
     }
@@ -67,12 +69,12 @@ export default function FeedbackResponseDialog({
           color: "#fff",
         }}
       >
-        Ответ пользователю: {feedback.user.name}
+        {t("feedbackResponseTitle", { name: feedback.user.name })}
       </DialogTitle>
 
       <DialogContent sx={{ mt: 2 }}>
         <Typography variant="body2" sx={{ mb: 1, fontWeight: 500 }}>
-          Сообщение от пользователя:
+          {t("feedbackResponseUserMessage")}
         </Typography>
         <Box
           sx={{
@@ -90,7 +92,7 @@ export default function FeedbackResponseDialog({
 
         <TextField
           fullWidth
-          label="Ваш ответ"
+          label={t("feedbackResponseYourMessage")}
           multiline
           rows={4}
           value={message}
@@ -122,7 +124,7 @@ export default function FeedbackResponseDialog({
             borderRadius: "8px 2px 8px 2px",
           }}
         >
-          Отмена
+          {t("cancel")}
         </Button>
         <Button
           onClick={handleSend}
@@ -140,7 +142,7 @@ export default function FeedbackResponseDialog({
           {loading ? (
             <CircularProgress size={20} sx={{ color: "white" }} />
           ) : (
-            "Отправить"
+            t("send")
           )}
         </Button>
       </DialogActions>

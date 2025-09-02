@@ -16,6 +16,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useMemo } from "react";
 import { api } from "../../api/client";
+import { useTranslation, localeMap } from "../../i18n";
 
 interface UploadRecord {
   id: number;
@@ -35,6 +36,7 @@ const fetchUploads = async (): Promise<UploadRecord[]> => {
 export default function UploadsHistory() {
   const theme = useTheme();
   const [selectedMonth, setSelectedMonth] = useState<Dayjs | null>(null);
+  const { t, lang } = useTranslation();
 
   const { data, isLoading } = useQuery({
     queryKey: ["uploads-history"],
@@ -63,18 +65,18 @@ export default function UploadsHistory() {
         mb={2}
         sx={{ textTransform: "uppercase", letterSpacing: 1 }}
       >
-        📂 История загрузок
+        {t("uploadsHistoryTitle")}
       </Typography>
 
       <Box display="flex" alignItems="center" gap={2} mb={2}>
         <DatePicker
           views={["year", "month"]}
-          label="Фильтр по месяцу"
+          label={t("filterByMonth")}
           value={selectedMonth}
           onChange={(newValue) => setSelectedMonth(newValue)}
         />
         <Button variant="text" onClick={() => setSelectedMonth(null)}>
-          Сбросить
+          {t("reset")}
         </Button>
       </Box>
 
@@ -111,11 +113,11 @@ export default function UploadsHistory() {
                 },
               }}
             >
-              <TableCell>Файл</TableCell>
-              <TableCell>Дата загрузки</TableCell>
-              <TableCell>Дата для учёта</TableCell>
-              <TableCell>Записей</TableCell>
-              <TableCell>Статус</TableCell>
+              <TableCell>{t("uploadsFile")}</TableCell>
+              <TableCell>{t("uploadsUploadDate")}</TableCell>
+              <TableCell>{t("uploadsAccountingDate")}</TableCell>
+              <TableCell>{t("uploadsRecords")}</TableCell>
+              <TableCell>{t("uploadsStatus")}</TableCell>
             </TableRow>
           </TableHead>
 
@@ -133,21 +135,23 @@ export default function UploadsHistory() {
                 <TableRow key={u.id} hover>
                   <TableCell>{u.originalName}</TableCell>
                   <TableCell>
-                    {new Date(u.createdAt).toLocaleString("ru-RU")}
+                    {new Date(u.createdAt).toLocaleString(localeMap[lang])}
                   </TableCell>
                   <TableCell>
-                    {new Date(u.uploadDate).toLocaleDateString("ru-RU")}
+                    {new Date(u.uploadDate).toLocaleDateString(localeMap[lang])}
                   </TableCell>
                   <TableCell>{u.recordsCount}</TableCell>
                   <TableCell>
-                    {u.processed ? "✅ Обработан" : "⏳ В процессе"}
+                    {u.processed
+                      ? t("uploadsProcessed")
+                      : t("uploadsProcessing")}
                   </TableCell>
                 </TableRow>
               ))
             ) : (
               <TableRow>
                 <TableCell colSpan={5} align="center">
-                  Нет загруженных файлов
+                  {t("uploadsNone")}
                 </TableCell>
               </TableRow>
             )}

@@ -13,7 +13,7 @@ import { useState } from "react";
 import { toast } from "react-hot-toast";
 import type { WorkerHour } from "../../hooks/useWorkerHours";
 import WorkerDetailsDrawer from "./WorkerDetailsDrawer";
-import { useTranslation } from "../../i18n";
+import { useTranslation, localeMap } from "../../i18n";
 
 interface Props {
   data: WorkerHour[];
@@ -31,7 +31,7 @@ export default function WorkerHoursTable({
   const [selectedWorker, setSelectedWorker] = useState<
     WorkerHour["user"] | null
   >(null);
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
@@ -136,7 +136,7 @@ export default function WorkerHoursTable({
 
                   {/* Date */}
                   <TableCell>
-                    {new Date(wh.date).toLocaleDateString("ru-RU")}
+                    {new Date(wh.date).toLocaleDateString(localeMap[lang])}
                   </TableCell>
 
                   {/* Hours */}

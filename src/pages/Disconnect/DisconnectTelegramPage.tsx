@@ -17,7 +17,11 @@ export default function DisconnectTelegramPage() {
   const theme = useTheme();
   const [telegramId, setTelegramId] = useState("");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<any | null>(null);
+  interface DisconnectResult {
+    message: string;
+    users: { id: number; name: string }[];
+  }
+  const [result, setResult] = useState<DisconnectResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { t } = useTranslation();
 
@@ -35,9 +39,10 @@ export default function DisconnectTelegramPage() {
         telegramId,
       });
 
-      setResult(res.data);
-    } catch (e: any) {
-      setError(e?.response?.data?.error || t("disconnectFailed"));
+      setResult(res.data as DisconnectResult);
+    } catch (e: unknown) {
+      const err = e as { response?: { data?: { error?: string } } };
+      setError(err.response?.data?.error || t("disconnectFailed"));
     } finally {
       setLoading(false);
     }
@@ -95,7 +100,7 @@ export default function DisconnectTelegramPage() {
             <Alert severity="success">
               {result.message}
               <ul>
-                {result.users.map((u: any) => (
+                {result.users.map((u) => (
                   <li key={u.id}>
                     {u.name} (ID: {u.id})
                   </li>

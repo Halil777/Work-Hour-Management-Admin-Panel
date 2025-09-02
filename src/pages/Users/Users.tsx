@@ -17,11 +17,11 @@ import {
 import { useState, useMemo } from "react";
 import { useUsers } from "../../hooks/useUsers";
 import SearchInput from "../../components/common/SearchInput";
-import { useTranslation } from "../../i18n";
+import { useTranslation, localeMap } from "../../i18n";
 
 export default function UsersTable() {
   const theme = useTheme();
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   // local states
   const [page, setPage] = useState(0);
@@ -145,7 +145,9 @@ export default function UsersTable() {
                       </TableCell>
                       <TableCell>{u.telegramId ?? "-"}</TableCell>
                       <TableCell>
-                        {new Date(u.createdAt).toLocaleDateString("ru-RU")}
+                        {new Date(u.createdAt).toLocaleDateString(
+                          localeMap[lang]
+                        )}
                       </TableCell>
                     </TableRow>
                   ))}
