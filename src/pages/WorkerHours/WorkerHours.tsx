@@ -32,7 +32,13 @@ export default function WorkerHoursPage() {
       </Typography>
 
       <Stack direction="row" my={3} spacing={2} alignItems="center">
-        <SearchInput value={search} onChange={setSearch} />
+        <SearchInput
+          value={search}
+          onChange={(val) => {
+            setSearch(val);
+            setPage(0); // täze gözlegde page reset
+          }}
+        />
         <Typography
           variant="subtitle1"
           sx={{

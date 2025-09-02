@@ -1,4 +1,3 @@
-// hooks/useWorkerHours.ts
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { api } from "../api/client";
 
