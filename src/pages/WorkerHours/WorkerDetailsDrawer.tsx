@@ -12,6 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../api/client";
+import { useTranslation } from "../../i18n";
 import {
   BarChart,
   Bar,
@@ -43,6 +44,7 @@ const fetchWorkerStats = async (userId: number): Promise<WorkerStats> => {
 
 export default function WorkerDetailsDrawer({ open, onClose, worker }: Props) {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   const { data, isLoading } = useQuery({
     queryKey: ["worker-stats", worker?.id],
@@ -72,7 +74,7 @@ export default function WorkerDetailsDrawer({ open, onClose, worker }: Props) {
           alignItems="center"
         >
           <Typography variant="h5" fontWeight={700}>
-            👤 Профиль сотрудника
+            {t("workerProfileTitle")}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -107,7 +109,7 @@ export default function WorkerDetailsDrawer({ open, onClose, worker }: Props) {
 
         {/* Stats */}
         {isLoading ? (
-          <Typography>Загрузка...</Typography>
+          <Typography>{t("loading")}</Typography>
         ) : (
           data && (
             <>
@@ -115,10 +117,10 @@ export default function WorkerDetailsDrawer({ open, onClose, worker }: Props) {
               <Card sx={{ mb: 3 }}>
                 <CardContent>
                   <Typography variant="h6" fontWeight={700}>
-                    📊 Общая статистика
+                    {t("workerStatsTitle")}
                   </Typography>
                   <Typography mt={1}>
-                    Всего часов:{" "}
+                    {t("workerStatsTotalHours")} {" "}
                     <b style={{ color: theme.palette.success.main }}>
                       {data.totalHours}
                     </b>
@@ -130,7 +132,7 @@ export default function WorkerDetailsDrawer({ open, onClose, worker }: Props) {
               <Card>
                 <CardContent>
                   <Typography variant="h6" fontWeight={700} gutterBottom>
-                    🗓 Часы по месяцам
+                    {t("workerStatsMonthlyTitle")}
                   </Typography>
                   <Box sx={{ height: 300 }}>
                     <ResponsiveContainer width="100%" height="100%">

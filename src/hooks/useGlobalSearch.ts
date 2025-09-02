@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { api } from "../api/client";
 

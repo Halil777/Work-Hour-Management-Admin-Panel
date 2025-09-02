@@ -6,6 +6,7 @@ import {
   ListItemText,
   useTheme,
   Badge,
+  useMediaQuery,
 } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import DashboardIcon from "@mui/icons-material/Dashboard";
@@ -33,6 +34,7 @@ const menu = [
 export default function Sidebar() {
   const location = useLocation();
   const theme = useTheme();
+  const isSmall = useMediaQuery(theme.breakpoints.down("sm"));
   const { t } = useTranslation();
   const unread = useUnreadFeedbackPolling(5000);
 
@@ -40,9 +42,9 @@ export default function Sidebar() {
     <Drawer
       variant="permanent"
       sx={{
-        width: 220,
+        width: isSmall ? 60 : 220,
         [`& .MuiDrawer-paper`]: {
-          width: 220,
+          width: isSmall ? 60 : 220,
           borderRight: "none",
           background:
             theme.palette.mode === "dark"
@@ -57,7 +59,7 @@ export default function Sidebar() {
         pt: 40,
       }}
     >
-      <List sx={{ mt: 10 }}>
+      <List sx={{ mt: isSmall ? 2 : 10 }}>
         {menu.map((item) => (
           <ListItemButton
             key={item.text}
@@ -65,9 +67,10 @@ export default function Sidebar() {
             to={item.path}
             selected={location.pathname === item.path}
             sx={{
-              m: "6px 12px",
+              m: isSmall ? "8px" : "6px 12px",
               py: 1,
               borderRadius: 2,
+              justifyContent: isSmall ? "center" : "flex-start",
               transition: "all 0.3s ease",
               "&:hover": {
                 transform: "translateX(6px)",
@@ -86,7 +89,12 @@ export default function Sidebar() {
               },
             }}
           >
-            <ListItemIcon sx={{ minWidth: 36 }}>
+            <ListItemIcon
+              sx={{
+                minWidth: isSmall ? 0 : 36,
+                justifyContent: "center",
+              }}
+            >
               {item.text === "menuFeedbacks" && unread > 0 ? (
                 <Badge color="error" badgeContent={unread}>
                   {item.icon}
@@ -95,10 +103,12 @@ export default function Sidebar() {
                 item.icon
               )}
             </ListItemIcon>
-            <ListItemText
-              primary={t(item.text)}
-              primaryTypographyProps={{ fontWeight: 600 }}
-            />
+            {!isSmall && (
+              <ListItemText
+                primary={t(item.text)}
+                primaryTypographyProps={{ fontWeight: 600 }}
+              />
+            )}
           </ListItemButton>
         ))}
       </List>

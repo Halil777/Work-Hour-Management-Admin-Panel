@@ -36,7 +36,7 @@ export default function ExcelUpload() {
   const [uploading, setUploading] = useState<boolean>(false);
   const [timeLeft, setTimeLeft] = useState<string>("");
   const cancelSource = useRef<CancelTokenSource | null>(null);
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
 
   const onDrop = (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -102,7 +102,7 @@ export default function ExcelUpload() {
       cancelSource.current = axios.CancelToken.source();
       const startTime = Date.now();
 
-      const res = await axios.post("/admin/upload-excel", formData, {
+      await axios.post("/admin/upload-excel", formData, {
         baseURL: api.defaults.baseURL,
         headers: { "Content-Type": "multipart/form-data" },
         cancelToken: cancelSource.current.token,
@@ -126,12 +126,19 @@ export default function ExcelUpload() {
 
           if (eta > 1) {
             setTimeLeft(
-              `${uploadedMB} MB из ${totalMB} MB • осталось ~${Math.ceil(
-                eta
-              )} сек`
+              t("uploadsProgress", {
+                uploaded: uploadedMB,
+                total: totalMB,
+                seconds: Math.ceil(eta),
+              })
             );
           } else {
-            setTimeLeft(`${uploadedMB} MB из ${totalMB} MB • Завершаем...`);
+            setTimeLeft(
+              t("uploadsProgressFinishing", {
+                uploaded: uploadedMB,
+                total: totalMB,
+              })
+            );
           }
         },
       });
@@ -143,22 +150,19 @@ export default function ExcelUpload() {
       // Notification
       if (totalTime > 20) {
         toast.success(
-          `Файл успешно загружен ✅ (время загрузки: ${Math.ceil(
-            totalTime
-          )} сек)\nИнтернет соединение медленное, но все часы были отправлены в Telegram бот 📩`
+          t("uploadsSuccessSlow", { seconds: Math.ceil(totalTime) })
         );
       } else {
         toast.success(
-          `Файл успешно загружен ✅ (время загрузки: ${Math.ceil(
-            totalTime
-          )} сек)`
+          t("uploadsSuccess", { seconds: Math.ceil(totalTime) })
         );
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       if (axios.isCancel(error)) {
         toast(t("uploadsCancel"));
       } else {
-        toast.error(error?.response?.data?.error || "Error");
+        const err = error as { response?: { data?: { error?: string } } };
+        toast.error(err?.response?.data?.error || "Error");
       }
     } finally {
       setUploading(false);
@@ -327,7 +331,7 @@ export default function ExcelUpload() {
       </Box>
 
       {/* Uploads history */}
-      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="ru">
+      <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={lang}>
         <UploadsHistory />
       </LocalizationProvider>
     </>
