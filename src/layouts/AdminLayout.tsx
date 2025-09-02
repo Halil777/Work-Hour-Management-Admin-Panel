@@ -5,7 +5,7 @@ import {
   Toolbar,
   Typography,
   IconButton,
-  useTheme,
+  Badge,
 } from "@mui/material";
 import Brightness4Icon from "@mui/icons-material/Brightness4";
 import Brightness7Icon from "@mui/icons-material/Brightness7";
@@ -14,11 +14,14 @@ import Sidebar from "../components/layout/Sidebar";
 import { useColorMode } from "../theme/ThemeProvider";
 import { useTranslation } from "../i18n";
 import LanguageSwitcher from "../components/common/LanguageSwitcher";
+import NotificationsIcon from "@mui/icons-material/Notifications";
+import { Link } from "react-router-dom";
+import useUnreadFeedbackCount from "../hooks/useUnreadFeedbackCount";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  const theme = useTheme();
   const { toggle, mode } = useColorMode();
   const { t } = useTranslation();
+  const unread = useUnreadFeedbackCount();
 
   return (
     <Box
@@ -61,6 +64,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           >
             {t("appTitle")}
           </Typography>
+          <IconButton color="inherit" component={Link} to="/feedbacks">
+            <Badge color="error" badgeContent={unread} invisible={unread === 0}>
+              <NotificationsIcon />
+            </Badge>
+          </IconButton>
           <LanguageSwitcher />
           <IconButton color="inherit" onClick={toggle}>
             {mode === "dark" ? <Brightness7Icon /> : <Brightness4Icon />}

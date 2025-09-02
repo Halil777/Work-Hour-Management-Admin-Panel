@@ -1,20 +1,28 @@
 import { Box, Typography, Paper, useTheme, Stack } from "@mui/material";
 import { useFeedbacks } from "../../hooks/useFeedbacks";
 import FeedbacksTable from "./FeedbacksTable";
-import CountUp from "react-countup";
-import { useState } from "react";
-import FilterFeedback from "./FilterFeedback";
+import { useEffect, useState } from "react";
 import SearchFeedback from "./SearchFeedback";
 import { useTranslation } from "../../i18n";
+import { markFeedbacksAsRead } from "../../api/services/feedbackService";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function FeedbacksPage() {
   const { data, isLoading, isFetching } = useFeedbacks();
   const theme = useTheme();
+  const queryClient = useQueryClient();
 
   // state for filters
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const { t } = useTranslation();
+
+  useEffect(() => {
+    if (data?.some((f) => !f.adminNotified)) {
+      markFeedbacksAsRead().then(() =>
+        queryClient.invalidateQueries({ queryKey: ["feedbacks"] })
+      );
+    }
+  }, [data, queryClient]);
 
   // diňe INCORRECT_TIME hasapla
   const incorrect = (data || []).filter((f) => f.action === "INCORRECT_TIME");
@@ -52,10 +60,6 @@ export default function FeedbacksPage() {
 
       {/* Filter + Search */}
       <Stack direction={{ xs: "column", sm: "row" }} spacing={2} mb={2}>
-        {/* <FilterFeedback
-          selectedDate={selectedDate}
-          onChange={setSelectedDate}
-        /> */}
         <SearchFeedback value={searchQuery} onChange={setSearchQuery} />
       </Stack>
 
@@ -86,7 +90,7 @@ export default function FeedbacksPage() {
           isLoading={isLoading}
           isFetching={isFetching}
           searchQuery={searchQuery}
-          selectedDate={selectedDate}
+          selectedDate={null}
         />
       </Paper>
     </Box>
