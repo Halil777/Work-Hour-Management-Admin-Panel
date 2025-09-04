@@ -6,8 +6,8 @@ import {
   TableRow,
   Skeleton,
   useTheme,
-  Box,
   CircularProgress,
+  Box,
 } from "@mui/material";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
@@ -33,12 +33,16 @@ export default function WorkerHoursTable({
   >(null);
   const { t, lang } = useTranslation();
 
-  const handleCopy = (text: string) => {
+  // ✅ Copy + notification
+  const handleCopy = (text: string, label?: string) => {
     navigator.clipboard.writeText(text);
     setCopied(text);
-    toast.success(`${t("copied")}: ${text}`, { duration: 2000 });
 
-    // reset after 2 sec
+    toast.success(`${label ? `${t(label)} ` : ""}${t("copied")}: ${text}`, {
+      duration: 2000,
+    });
+
+    // reset icon after 2s
     setTimeout(() => setCopied(null), 2000);
   };
 
@@ -60,7 +64,13 @@ export default function WorkerHoursTable({
               },
             }}
           >
-            {[t("workerHoursUser"), t("workerHoursPosition"), t("usersTelegram"), t("workerHoursDate"), t("workerHoursHours")].map((head) => (
+            {[
+              t("workerHoursUser"),
+              t("workerHoursPosition"),
+              t("usersTelegram"),
+              t("workerHoursDate"),
+              t("workerHoursHours"),
+            ].map((head) => (
               <TableCell
                 key={head}
                 sx={{
@@ -87,7 +97,6 @@ export default function WorkerHoursTable({
               ))
             : data.map((wh) => (
                 <TableRow
-                  onClick={() => setSelectedWorker(wh.user)}
                   key={wh.id}
                   hover
                   sx={{
@@ -108,7 +117,7 @@ export default function WorkerHoursTable({
                   {/* User */}
                   <TableCell
                     sx={{ cursor: "pointer" }}
-                    onClick={() => handleCopy(wh.user.name)}
+                    onClick={() => handleCopy(wh.user.name, "nameLabel")}
                   >
                     {wh.user.name}
                     {copied === wh.user.name && (
@@ -125,7 +134,8 @@ export default function WorkerHoursTable({
                       cursor: wh.user.telegramId ? "pointer" : "default",
                     }}
                     onClick={() =>
-                      wh.user.telegramId && handleCopy(wh.user.telegramId)
+                      wh.user.telegramId &&
+                      handleCopy(wh.user.telegramId, "telegramIdLabel")
                     }
                   >
                     {wh.user.telegramId ?? "-"}
