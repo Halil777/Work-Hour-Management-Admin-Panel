@@ -91,6 +91,9 @@ export default function FeedbacksPage() {
           isFetching={isFetching}
           searchQuery={searchQuery}
           selectedDate={null}
+          onResponded={() =>
+            queryClient.invalidateQueries({ queryKey: ["feedbacks"] })
+          }
         />
       </Paper>
     </Box>
