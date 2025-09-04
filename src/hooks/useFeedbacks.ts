@@ -8,6 +8,7 @@ export interface Feedback {
   adminNotified: boolean;
   createdAt: string;
   workerHoursId: number;
+  response?: string | null;
   user: {
     id: number;
     name: string;

@@ -18,6 +18,7 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import { useState } from "react";
 import type { Feedback } from "../../hooks/useFeedbacks";
 import FeedbackResponseDialog from "./FeedbackResponseDialog";
+import FeedbackAnswerDialog from "./FeedbackAnswerDialog";
 import { useTranslation, localeMap } from "../../i18n";
 
 interface Props {
@@ -39,6 +40,7 @@ export default function FeedbacksTable({
 }: Props) {
   const theme = useTheme();
   const [selected, setSelected] = useState<Feedback | null>(null);
+  const [viewing, setViewing] = useState<Feedback | null>(null);
   const [snackbar, setSnackbar] = useState<string | null>(null);
   const { t, lang } = useTranslation();
 
@@ -151,7 +153,19 @@ export default function FeedbacksTable({
             </TableRow>
           ) : (
             paginated.map((f) => (
-              <TableRow key={f.id} hover>
+              <TableRow
+                key={f.id}
+                hover
+                onClick={() => f.response && setViewing(f)}
+                sx={{
+                  backgroundColor: f.response
+                    ? theme.palette.mode === "dark"
+                      ? "rgba(76,175,80,0.1)"
+                      : "rgba(76,175,80,0.15)"
+                    : undefined,
+                  cursor: f.response ? "pointer" : "default",
+                }}
+              >
                 {/* User */}
                 <TableCell>
                   <Tooltip title={t("copyName")}>
@@ -205,7 +219,12 @@ export default function FeedbacksTable({
 
                 {/* Actions */}
                 <TableCell>
-                  <IconButton onClick={() => setSelected(f)}>
+                  <IconButton
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelected(f);
+                    }}
+                  >
                     <ReplyIcon color="primary" />
                   </IconButton>
                 </TableCell>
@@ -238,6 +257,13 @@ export default function FeedbacksTable({
             onResponded?.(id);
             setSelected(null);
           }}
+        />
+      )}
+
+      {viewing && (
+        <FeedbackAnswerDialog
+          feedback={viewing}
+          onClose={() => setViewing(null)}
         />
       )}
 
